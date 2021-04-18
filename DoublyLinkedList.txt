@@ -1,0 +1,239 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Node
+{
+int num;
+struct Node *next;
+struct Node *prev;
+};
+struct Node *start;
+struct Node *end;
+void addAtEnd(int num)
+{
+struct Node *t;
+t=(struct Node *)malloc(sizeof(struct Node));
+t->num=num;
+t->next=NULL;
+t->prev=NULL;
+if(start==NULL)
+{
+start=t;
+end=t;
+}
+else
+{
+end->next=t;
+t->prev=end;
+end=t;
+}
+}
+void InsertAtTop(int num)
+{
+struct Node *t;
+t=(struct Node *)malloc(sizeof(struct Node));
+t->num=num;
+t->next=NULL;
+t->prev=NULL;
+if(start==NULL)
+{
+start=t;
+end=t;
+}
+else
+{
+t->next=start;
+start->prev=t;
+start=t;
+}
+}
+void TraverseTopToBottom()
+{
+struct Node *t;
+for(t=start;t!=NULL;t=t->next)
+{
+printf("%d\n",t->num);
+}
+}
+void TraverseBottomToTop()
+{
+struct Node *t;
+for(t=end;t!=NULL;t=t->prev)
+{
+printf("%d\n",t->num);
+}
+}
+int InsertAt(int num,int pos)
+{
+struct Node *t,*p1;
+int x;
+if(pos<0)
+{
+return 0;
+}
+x=0;
+p1=start;
+while(p1!=NULL&&x<pos)
+{
+p1=p1->next;
+x++;
+}
+if(p1==NULL&&x<pos)
+{
+return 0;
+}
+t=(struct Node *)malloc(sizeof(struct Node));
+t->num=num;
+t->next=NULL;
+t->prev=NULL;
+if(p1==NULL)
+{
+if(start==NULL)
+{
+start=t;
+end=t;
+}
+else
+{
+end->next=t;
+t->prev=end;
+end=t;
+}
+return 1;
+}
+if(p1==start)
+{
+t->next=start;
+start->prev=t;
+start=t;
+return 1;
+}
+t->next=p1;
+t->prev=p1->prev;
+p1->prev->next=t;
+p1->prev=t;
+return 1;
+}
+int RemoveAt(int pos)
+{
+struct Node *p1;
+int x;
+if(pos<0)
+{
+return 0;
+}
+x=0;
+p1=start;
+while(p1!=NULL&&x<pos)
+{
+p1=p1->next;
+x++;
+}
+if(p1==NULL&&x<pos)
+{
+return 0;
+}
+if(p1==start&&p1==end)
+{
+start=NULL;
+end=NULL;
+free(p1);
+return 1;
+}
+if(p1==start)
+{
+start=start->next;
+start->prev=NULL;
+free(p1);
+return 1;
+}
+if(p1==end)
+{
+end=end->prev;
+end->next=NULL;
+free(p1);
+return 1;
+}
+p1->prev->next=p1->next;
+p1->next->prev=p1->prev;
+free(p1);
+return 1;
+}
+int main()
+{
+start=NULL;
+end=NULL;
+int ch,num,pos;
+while(1)
+{
+printf("1.addAtEnd\n");
+printf("2.InsertAtTop\n");
+printf("3.InsertAt\n");
+printf("4.RemoveAt\n");
+printf("5.TraverseToptoBottom\n");
+printf("6.TraverseBottomtoTop\n");
+printf("7.Exit\n");
+printf("Enter your choice:");
+scanf("%d",&ch);
+fflush(stdin);
+if(ch==1)
+{
+printf("Enter number to add at end\n");
+scanf("%d",&num);
+fflush(stdin);
+addAtEnd(num);
+printf("%d added at end\n",num);
+}
+else if(ch==2)
+{
+printf("Enter the number to insert at top\n");
+scanf("%d",&num);
+fflush(stdin);
+InsertAtTop(num);
+printf("%d inseted at top\n",num);
+}
+else if(ch==3)
+{
+printf("Enter the number to insert at a position:");
+scanf("%d",&num);
+fflush(stdin);
+printf("Enter position:");
+scanf("%d",&pos);
+fflush(stdin);
+if(InsertAt(num,pos))
+{
+printf("%d inserted at position %d\n",num,pos);
+}
+else
+{
+printf("Invalid position: %d\n",pos);
+}
+}
+else if(ch==4)
+{
+printf("Enter the position of the element to remove:");
+scanf("%d",&pos);
+fflush(stdin);
+if(RemoveAt(pos))
+{
+printf("Element removed from position %d\n",pos);
+}
+else
+{
+printf("Invalid position :%d\n",pos);
+}
+}
+else if(ch==5)
+{
+TraverseTopToBottom();
+}
+else if(ch==6)
+{
+TraverseBottomToTop();
+}
+else
+{
+break;
+}
+}
+return 0;
+}
